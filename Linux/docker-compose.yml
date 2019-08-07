@@ -1,0 +1,39 @@
+version: "3.7"
+services:
+   generation:
+    image: tshark:latest
+    deploy:
+     mode: global
+     restart_policy:
+      condition: on-failure
+    networks:
+     - local
+    ports:
+     - "19:19"
+     - "813:813"
+     - "814:814"
+     - "80:80"
+    volumes:
+     - save:/archive
+   
+   envoi:
+    image: envoi:latest
+    deploy: 
+     mode: global
+    networks:
+     - local
+    ports:
+     - "21:21"
+    volumes:
+     - save:/archive 
+    
+networks:
+ local:
+volumes:
+ save:
+  driver_opts:
+   driver: "local"
+   type: "ntfs"
+   o: "bind"
+   device: Out/
+
