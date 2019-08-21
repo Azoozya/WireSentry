@@ -1,7 +1,4 @@
-$server = $args[ 0 ]
-$client = $args[ 1 ]
 $tshark = "D:\Wireshark\tshark.exe"
-$duration = 5 #Durée (en secondes) d'un enregistrement
 $MaxCapture = 5 #Nombre (en fichiers) d'enregistrements
 #nb_interface : Contient le nombre d'interfaces réseaux disponibles
 #interfaces : tableau de "-i $x" où x prend les valeurs succesives de 1 à nb_interface
@@ -44,9 +41,6 @@ Do{
     $capture_file = "$iterative.cap"
     $dirName = $dirName.ToString("HH_mm_ss__yyyy_MM_dd")
     mkdir "$dirName"
-    .$tshark -i Wi-Fi -f "host $IP" -a duration:$duration -F pcap -w $capture_file
-    #.\traitement.ps1 $client $server $capture_file $dirName $GW
-    .\traitement.ps1 $IP $GW $capture_file $dirName  #Utilisé pour test uniquement , à la place de la ligne d'avant
     $lastDirName = $dirName
     $dirName = date
     }
@@ -60,6 +54,4 @@ Do{
 } Until($nb_words -lt 6)
 
 
-
-  ## -Namespace "root\CIMV2" est peut-être à ajouter à la ligne "$colItems = Get-WmiObject Win32_NetworkAdapterConfiguration..."
 ## Get-Content test.csv | Select-String "Tony Passaquale" ~= grep
