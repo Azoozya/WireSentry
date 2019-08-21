@@ -12,7 +12,7 @@ $server = "52.143.140.165"
 #colItems contient l'ensemble des infos des différents interfaces
 #dirName : Le nom du "dossier" actuel (1 enregistrement 1 fichier)
 #lastDirName : fais une sauvegarde du dernier dossier crée (et rempli)
-
+51.143.140.165
 
 ##On génère le -i any version Windows [ATTENTION , -TotalCount 4 lit jusqu'à la 4ème ligne , potentiellement pas la bonne ligne en fonction des Systèmes]
   .$tshark -D | Measure-Object -line > txt.file
@@ -34,23 +34,25 @@ $server = "52.143.140.165"
 
 Do{
   ##On fait le ménage et on save la date à un certain format (pour le ménage et le nom du dossier)
-  $dirName = date
-  $year = $dirName.ToString("yyyy")
+  $date = date
+  $year = $date.ToString("yyyy")
 
   rm *.cap
-  rm -r *$year*
+  rm -r $year*
 
   ##On fait la capture pendant $MaxCapture fichiers de captures
   for($iterative=1 ; $iterative -lt ($MaxCapture)+1 ; $iterative++)
     {
     $capture_file = "$iterative.cap"
-    $dirName = $dirName.ToString("HH_mm_ss__yyyy_MM_dd")
+    $date = $date.ToString("HH_mm_ss__yyyy_MM_dd")
+    $dirName = "$year_$x"
     mkdir "$dirName"
-    .$tshark -i Wi-Fi -f "host $IP and port 19812 or port 19813 or port 19814" -a duration:$duration -F pcap -w $capture_file
-    .\traitement.ps1 $IP $server $capture_file $dirName $GW
-    #.\traitement.ps1 $IP $GW $capture_file $dirName  #Utilisé pour test uniquement , à la place de la ligne d'avant
+
+    .$tshark -i $interfaces -f "host $IP" -a duration:$duration -F pcap -w $capture_file
+    #.\traitement.ps1 $client $server $capture_file $dirName $GW
+    .\traitement.ps1 $IP $server $capture_file $dirName  #Utilisé pour test uniquement , à la place de la ligne d'avant
     $lastDirName = $dirName
-    $dirName = date
+    $date = date
     }
 
   #On récupère le nombre de symboles/lettres/chiffres il y'a dans le fichier (ne comptent que les caractères imprimables)
